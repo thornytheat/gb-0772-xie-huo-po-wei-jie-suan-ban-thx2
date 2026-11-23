@@ -8,8 +8,8 @@ def test_mixed_conflicts_conserve_berth_time(dirty):
 
 
 def test_individual_signed_payment_deltas(dirty):
-    assert [line['difference_cents'] for line in dirty.settlement['lines']]==[150,20,-60,-40,0,0]
-    assert dirty.settlement['money']=={'due_cents':2240,'paid_cents':2310,'difference_cents':70,'orphan_cents':140}
+    assert [line['difference_cents'] for line in dirty.settlement['lines']]==[25,-35,-75,-60,-150,-75]
+    assert dirty.settlement['money']=={'due_cents':2680,'paid_cents':2310,'difference_cents':-370,'orphan_cents':140}
 
 
 def test_null_amount_never_looks_like_paid_zero(dirty):
@@ -25,8 +25,11 @@ def test_orphan_payment_is_traceable(dirty):
 
 
 def test_identical_clean_payments_match_all_stops(clean):
-    assert [r['code'] for r in clean.settlement['lines']]==['MATCH']*4
+    # 历史回执按旧费率支付，切换后应收上调，逐单呈现 GAP 而非 MATCH。
+    assert [r['code'] for r in clean.settlement['lines']]==['GAP']*4
     assert clean.settlement['money']['paid_cents']==2100
+    assert clean.settlement['money']['due_cents']==2555
+    assert clean.settlement['money']['difference_cents']==-455
 
 
 def test_conflicting_payment_excludes_all_candidates(clean):

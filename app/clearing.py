@@ -1,6 +1,6 @@
 from functools import cached_property
 
-from app.billing.rates import price
+from app.billing.rates import LEGACY_BOOK, price, switch_difference
 from app.billing.settle import accounting
 from app.curb.bookings import at_arrival,revisions
 from app.curb.detections import prepare
@@ -58,9 +58,15 @@ class Clearing:
         return {'stays':matched,'booking_issues':issues}
 
     @cached_property
+    def ratebook(self):
+        return self.survey.ratebook or LEGACY_BOOK
+
+    @cached_property
     def pricing(self):
-        items=price(self.identity['stays'],self.coverage[1])
-        return {'stays':items,'due_cents':sum(s['due_cents'] for s in items)}
+        items=price(self.identity['stays'],self.coverage[1],self.ratebook)
+        return {'stays':items,'due_cents':sum(s['due_cents'] for s in items),
+                'rate_versions':self.ratebook.fingerprint(),
+                'switch':switch_difference(self.identity['stays'],self.coverage[1],self.ratebook)}
 
     @cached_property
     def settlement(self):

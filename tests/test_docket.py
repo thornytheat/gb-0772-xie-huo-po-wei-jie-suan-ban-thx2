@@ -48,4 +48,4 @@ def test_changed_inputs_produce_new_key(client):
 def test_invalid_bundle_recovers(client):
     result=client.post('/api/dockets',json={'bundle':{}})
     assert (result.status_code,result.json()['code'])==(422,'BUNDLE_BAD')
-    assert client.post('/api/dockets',json={'sample':'clean'}).json()['money']['due_cents']==2100
+    assert client.post('/api/dockets',json={'sample':'clean'}).json()['money']['due_cents']==2555

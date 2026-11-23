@@ -5,5 +5,19 @@
   "berths": [
     "B-01",
     "B-02"
+  ],
+  "rates": [
+    {
+      "version": "rate-2026-11",
+      "effective_at": "2026-11-01T00:00+08:00",
+      "base_cents": 20,
+      "upgrade_cents": 40
+    },
+    {
+      "version": "rate-2026-12",
+      "effective_at": "2026-12-01T00:00+08:00",
+      "base_cents": 25,
+      "upgrade_cents": 50
+    }
   ]
 }
